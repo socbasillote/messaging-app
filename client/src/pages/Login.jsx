@@ -1,8 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "../redux/authSlice";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const auth = useSelector((state) => state.auth);
 
   const fakeLogin = () => {
@@ -12,6 +15,8 @@ function Login() {
         token: "123",
       }),
     );
+
+    navigate("/chat");
   };
   return (
     <div className="p-10">
