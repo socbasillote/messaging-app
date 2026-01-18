@@ -8,8 +8,6 @@ function ChatList() {
 
   return (
     <div>
-      <div className="font-bold mb-4">Chats</div>
-
       {chats.map((chat) => (
         <div
           key={chat.id}
