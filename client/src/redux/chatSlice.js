@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import API from "../services/api";
 
 const initialState = {
   chats: [
@@ -6,6 +7,12 @@ const initialState = {
     { id: 2, name: "Sarah", last: "See you" },
   ],
   currentChat: null,
+};
+
+export const fetchChats = (userId) => async (dispatch) => {
+  const res = await API.get("/conversations/" + userId);
+  console.log("FETCH CHATS RESPONSE:", res.data); // 👈 ADD THIS
+  dispatch(setChats(res.data));
 };
 
 const chatSlice = createSlice({

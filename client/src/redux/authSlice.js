@@ -1,10 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
+import API from "../services/api";
 
 const initialState = {
   user: null, // who logged in
   token: null, // JWT from backend
   loading: false, // show spinner
   error: null, // show message
+};
+
+export const loginUser = (form) => async (dispatch) => {
+  try {
+    dispatch(loginStart());
+
+    const res = await API.post("/auth/login", form);
+
+    dispatch(loginSuccess(res.data));
+  } catch (err) {
+    dispatch(loginFail("Login failed"));
+  }
 };
 
 const authSlice = createSlice({

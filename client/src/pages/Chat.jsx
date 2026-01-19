@@ -1,9 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ChatList from "../components/ChatList";
 import MessageWindow from "../components/MessageWindow";
 import MessageInput from "../components/MessageInput";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+
+import { socket } from "../services/socket";
+import { addMessage } from "../redux/messageSlice";
 
 function Chat() {
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user) {
+      socket.emit("addUser", user._id);
+    }
+
+    socket.on("getMessage", (msg) => {
+      dispatch(addMessage(msg));
+    });
+  }, [user]);
+
+  if (!user) return <Navigate to="/" />;
+
   return (
     <div className="flex h-screen">
       {/* Left Sidebar */}

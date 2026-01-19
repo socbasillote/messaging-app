@@ -1,18 +1,31 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addMessage } from "../redux/messageSlice";
+import { sendMessage } from "../services/chatService";
+import { socket } from "../services/socket";
 
 function MessageInput() {
   const [text, setText] = useState("");
+
+  const { currentChat } = useSelector((state) => state.chat);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const send = () => {
-    dispatch(
-      addMessage({
-        text,
-        sender: "me",
-      }),
-    );
+  const send = async () => {
+    const data = {
+      conversationId: currentChat._id,
+      sender: user._id,
+      text,
+    };
+
+    const res = await sendMessage(data);
+
+    socket.emit("sendMessage", {
+      receiverId: "OTHER_USER_ID",
+      message: res.data,
+    });
+
+    dispatch(addMessage(res.data));
 
     setText("");
   };

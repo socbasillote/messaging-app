@@ -9,17 +9,21 @@ const router = express.Router();
 
 // Register
 router.post("/register", async (req, res) => {
-  const hashed = await bcrypt.hash(req.body.password, 10);
+  try {
+    const hashed = await bcrypt.hash(req.body.password, 10);
 
-  const user = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: hashed,
-  });
+    const user = new User({
+      username: req.body.username,
+      email: req.body.email,
+      password: hashed,
+    });
 
-  await user.save();
-
-  res.send("registered");
+    await user.save();
+    res.status(201).send("registered");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err.message);
+  }
 });
 
 // LOGIN
