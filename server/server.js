@@ -55,6 +55,14 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("typing", ({ receiverId }) => {
+    const user = onlineUsers.find((u) => (u.userId = receiverId));
+
+    if (user) {
+      io.to(user.socketId).emit("typing");
+    }
+  });
+
   socket.on("disconnect", () => {
     onlineUsers = onlineUsers.filter((u) => u.socketId !== socket.id);
   });

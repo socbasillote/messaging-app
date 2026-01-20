@@ -6,6 +6,7 @@ import { socket } from "../services/socket";
 
 function MessageInput() {
   const [text, setText] = useState("");
+  const [typing, setTyping] = useState(false);
 
   const { currentChat } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.auth);
@@ -34,7 +35,13 @@ function MessageInput() {
     <div className="mt-4">
       <input
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+
+          socket.emit("typing", {
+            receiverId: "OTHER_USER_ID",
+          });
+        }}
         className="border p-2 w-full"
         placeholder="type message..."
       />
