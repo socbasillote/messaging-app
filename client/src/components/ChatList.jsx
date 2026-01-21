@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchChats, setCurrentChat } from "../redux/chatSlice";
 import { socket } from "../services/socket";
+import NewChat from "./NewChat";
 
 function ChatList() {
   const [online, setOnline] = useState([]);
+  const [show, setShow] = useState(false);
   const { chats } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user) dispatch(fetchChats("123"));
+    if (user) dispatch(fetchChats(user._id));
     //if (user) dispatch(fetchChats(user._id));
   }, [user]);
 
@@ -24,10 +26,12 @@ function ChatList() {
     <div>
       <button
         className="bg-green-500 text-white p-1 mb-2"
-        onClick={() => alert("search user soon")}
+        onClick={() => setShow(true)}
       >
         New Chat
       </button>
+
+      {show && <NewChat close={() => setShow(false)} />}
 
       {chats.map((chat) => (
         <div

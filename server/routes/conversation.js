@@ -5,8 +5,20 @@ const router = express.Router();
 
 // Create new conversation
 router.post("/", async (req, res) => {
+  const { senderId, receiverId } = req.body;
+
+  // 1. check if conversation already exists
+  const existing = await Conversation.findOne({
+    members: { $all: [senderId, receiverId] },
+  });
+
+  if (existing) {
+    return res.json(existing);
+  }
+
+  // 2. if not -> create new
   const conv = new Conversation({
-    members: [req.body.senderId, req.body.receiverId],
+    members: [senderId, receiverId],
   });
 
   const saved = await conv.save();

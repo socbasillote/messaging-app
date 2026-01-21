@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import authRoute from "./routes/auth.js";
 import convRoute from "./routes/conversation.js";
 import msgRoute from "./routes/messages.js";
+import userRoute from "./routes/user.js";
 
 import http from "http";
 import { Server } from "socket.io";
@@ -24,6 +25,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoute);
 app.use("/api/conversations", convRoute);
 app.use("/api/messages", msgRoute);
+
+app.use("/api/users", userRoute);
 
 // create HTTP server for socket.io
 const server = http.createServer(app);

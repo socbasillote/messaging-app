@@ -2,10 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import API from "../services/api";
 
 const initialState = {
-  chats: [
-    { id: 1, name: "John", last: "Hello there" },
-    { id: 2, name: "Sarah", last: "See you" },
-  ],
+  chats: [],
   currentChat: null,
 };
 
@@ -25,12 +22,20 @@ const chatSlice = createSlice({
       state.chats = action.payload;
     },
 
+    addChat: (state, action) => {
+      const exists = state.chats.some((c) => c._id === action.payload._id);
+
+      if (!exists) {
+        state.chats.push(action.payload);
+      }
+    },
+
     setCurrentChat: (state, action) => {
       state.currentChat = action.payload;
     },
   },
 });
 
-export const { setChats, setCurrentChat } = chatSlice.actions;
+export const { setChats, setCurrentChat, addChat } = chatSlice.actions;
 
 export default chatSlice.reducer;

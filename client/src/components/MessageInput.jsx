@@ -6,11 +6,14 @@ import { socket } from "../services/socket";
 
 function MessageInput() {
   const [text, setText] = useState("");
-  const [typing, setTyping] = useState(false);
 
   const { currentChat } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
+  if (!currentChat) return null;
+
+  const receiverId = currentChat.members.find((id) => id !== user._id);
 
   const send = async () => {
     const data = {
@@ -22,7 +25,7 @@ function MessageInput() {
     const res = await sendMessage(data);
 
     socket.emit("sendMessage", {
-      receiverId: "OTHER_USER_ID",
+      receiverId,
       message: res.data,
     });
 
@@ -38,9 +41,7 @@ function MessageInput() {
         onChange={(e) => {
           setText(e.target.value);
 
-          socket.emit("typing", {
-            receiverId: "OTHER_USER_ID",
-          });
+          socket.emit("typing", { receiverId });
         }}
         className="border p-2 w-full"
         placeholder="type message..."
